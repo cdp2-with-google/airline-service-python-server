@@ -6,7 +6,7 @@ from vertexai.generative_models import (
     Part,
     Tool,
 )
-from .vertex_ai_search import search_pdf
+from ..rag.vertex_ai_search import search_pdf
 
 def delcare_functions() -> Tool:
     # 항공사 운송 약관(탑승 수속, 수하물 규정 등)을 조회

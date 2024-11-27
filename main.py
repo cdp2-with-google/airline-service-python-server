@@ -3,7 +3,7 @@ from flask_cors import CORS
 import time
 import json
 from datetime import datetime
-from src.react import send_chat_message
+from src.service.tool.react import send_chat_message
 
 app = Flask(__name__)
 CORS(app)
