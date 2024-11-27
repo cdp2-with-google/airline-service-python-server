@@ -14,13 +14,3 @@ def get_flight_info():
     #print(query)
     for doc in query:
         print(f"{doc.id}: {doc.to_dict()}")
-        
-        
-def request_api():
-    url = 'http://openapi.airport.co.kr/service/rest/FlightScheduleList/getIflightScheduleList'
-    encodingServiceKey = "CLOFRc6QeHPzk206iUaSxpsrv1NIq5JGMBXAVXvnKYh5rUpRNKOadLGr%2BjI%2BibALVFX%2Ba3pLAu35szb21BvLFw%3D%3D"
-    decodingServiceKey = "CLOFRc6QeHPzk206iUaSxpsrv1NIq5JGMBXAVXvnKYh5rUpRNKOadLGr+jI+ibALVFX+a3pLAu35szb21BvLFw=="
-    params ={'serviceKey' : decodingServiceKey, 'schDate' : '20241128', 'schDeptCityCode' : 'GMP', 'schArrvCityCode' : 'HND', 'schAirLine' : 'NH', 'schFlightNum' : 'NH862' }
-
-    response = requests.get(url, params=params)
-    print(response.content)
