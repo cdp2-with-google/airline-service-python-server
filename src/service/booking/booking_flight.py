@@ -1,7 +1,7 @@
-from ...util.firebase import build_firestore_client
+from ...util.firebase import init_firestore_client
 
 def book_flight():
-    db = build_firestore_client()
+    db = init_firestore_client()
     collection_name = "test"
     document_id = "doc1"
     data = {
