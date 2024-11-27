@@ -6,3 +6,4 @@ langchain
 flask
 flask-cors
 langchain_google_vertexai
+firebase-admin
