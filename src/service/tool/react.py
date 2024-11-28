@@ -87,13 +87,13 @@ def delcare_functions() -> Tool:
     )
     return flight_tool
 
-def handle_airline_policy(prompt, data):
+def handle_airline_policy(prompt, args):
     return search_pdf(prompt)
 
-def handle_flight_information(prompt, data):
+def handle_flight_information(prompt, args):
     return "handle_flight_information has been called."
 
-def handle_booking(prompt, data):
+def handle_booking(prompt, args):
     return "handle_booking has been called."
 
 operations = {
@@ -183,9 +183,9 @@ def send_chat_message(prompt:str) -> str:
 
     # 함수 호출의 응답에서 값 추출
     if (response.function_call is not None):
-        function_data = response.function_call
-        function_name = function_data.name
-        ret = operations[function_name](prompt, function_data)
+        function_args = response.function_call.args
+        function_name = response.function_call.name
+        ret = operations[function_name](prompt, function_args)
     else:
         ret = response.text
     # function_call = response.candidates[0].content.parts[0].function_call
