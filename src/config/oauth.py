@@ -3,8 +3,10 @@ from google_auth_oauthlib.flow import Flow
 from firebase_admin import credentials, firestore, initialize_app
 import os
 import config
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 app.secret_key = os.urandom(24)
 
 # Firestore 초기화
@@ -16,14 +18,16 @@ db = firestore.client()
 flow = Flow.from_client_secrets_file(
     'src/config/client_secret_965998489425-b14jbag85kh6g0cog4ro3kd5jjf9lpql.apps.googleusercontent.com.json',
     scopes=['openid', 'https://www.googleapis.com/auth/userinfo.email', 'https://www.googleapis.com/auth/userinfo.profile'],
-    redirect_uri='https://service-client-965998489425.asia-northeast1.run.app'
+    redirect_uri='http://127.0.0.1:5000/callback'
 )
 
 @app.route('/api/v1/oauth', methods=['POST'])
 def oauth_login():
     authorization_url, state = flow.authorization_url()
     session['state'] = state
-    return redirect(authorization_url)
+    # return redirect(authorization_url)
+    # 서버에서 URL을 리다이렉트하지 않고 클라이언트로 인증 URL을 직접 반환
+    return jsonify({'authorizationUrl': authorization_url})
 
 @app.route('/callback')
 def callback():
