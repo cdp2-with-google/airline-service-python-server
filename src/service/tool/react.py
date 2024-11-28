@@ -67,10 +67,12 @@ def delcare_functions() -> Tool:
                 # "airline_name": {"type": "string", "description": "The name of the airline for the flight to reserve."},
                 "departure": {"type": "string", "description": "The name of the departure airport for the flight to reserve."},
                 "destination": {"type": "string", "description": "The name of the destination airport for the flight to reserve."},
+                "departure_code": {"type": "string", "description": "The code of the departure airport of the flight to reserve."},
+                "destination_code": {"type": "string", "description": "The code of the destination airport of the flight to reserve."},
                 "date": {"type": "string", "format": "date", "description": "The departure date of the flight to reserve in format YYYY-MM-DD."},
                 "time": {"type": "string", "description": "The departure time of the flight to reserve in format HH:MM."},
             },
-            "required": ["departure", "destination", "date", "time"]
+            "required": ["departure", "destination", "departure_code", "destination_code", "date", "time"]
         },
     )
 
@@ -151,7 +153,7 @@ def send_chat_message(prompt:str) -> str:
     User prompt: Can I book a flight from Narita to San Francisco next Friday on 6PM?
     Predicted Tool: flight_tool
     Predicted Function: book_flight
-    Function parameters: {{"departure": "Narita", "destination": "San Francisco", "date": "YYYY-MM-DD", "time": "HH:MM"}} (You must replace date and time with user provided date and time value)
+    Function parameters: {{"departure": "Narita", "destination": "San Francisco", "departure_code": "NRT", "destination_code": "SFO", "date": "YYYY-MM-DD", "time": "HH:MM"}} (You must replace date and time with user provided date and time value)
     </example-book_flight>
 
     <addtional information>
