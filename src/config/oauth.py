@@ -25,10 +25,10 @@ flow = Flow.from_client_secrets_file(
 def oauth_login():
     authorization_url, state = flow.authorization_url()
     session['state'] = state
-    # return redirect(authorization_url)
-    # 서버에서 URL을 리다이렉트하지 않고 클라이언트로 인증 URL을 직접 반환
-    return jsonify({'authorizationUrl': authorization_url})
-
+    return redirect(authorization_url)
+    # # 서버에서 URL을 리다이렉트하지 않고 클라이언트로 인증 URL을 직접 반환
+    # return jsonify({'authorizationUrl': authorization_url})
+    
 @app.route('/callback')
 def callback():
     flow.fetch_token(authorization_response=request.url)
