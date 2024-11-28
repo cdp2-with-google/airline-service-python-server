@@ -11,11 +11,7 @@ from vertexai.generative_models import (
     GenerationConfig,
     GenerativeModel,
 )
-#from .config import PROJECT_ID, REGION, MODEL, SEARCH_URL
-PROJECT_ID = ""
-REGION="asia-northeast3"
-MODEL = "gemini-1.5-pro-002"
-SEARCH_URL = ""
+from ...settings import SEARCH_URL
 
 import google.auth
 import google.auth.transport.requests
@@ -36,7 +32,6 @@ def retrieve_vertex_ai_search(question:str, search_url:str, page_size:int) -> st
         "Authorization": "Bearer "+ id_token,
         "Content-Type": "application/json"
     }
-
 
     query_dic ={
         "query": question,
