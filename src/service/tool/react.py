@@ -8,6 +8,7 @@ from vertexai.generative_models import (
 )
 from ..rag.vertex_ai_search import search_pdf
 from datetime import datetime
+from ..flight_info.get_flight_info import get_flight_info
 
 def delcare_functions() -> Tool:
     # 항공사 운송 약관(탑승 수속, 수하물 규정 등)을 조회
@@ -88,10 +89,20 @@ def delcare_functions() -> Tool:
     return flight_tool
 
 def handle_airline_policy(prompt, args):
-    return search_pdf(prompt)
+    plain_text = search_pdf(prompt)
+    return {
+        "response_type": "plain_text",
+        "answer": plain_text,
+        "data": None
+    }
 
 def handle_flight_information(prompt, args):
-    return "handle_flight_information has been called."
+    flight_info = get_flight_info(args)
+    return {
+        "response_type": "get_flight_info",
+        "answer": str(flight_info),
+        "data": flight_info
+    }
 
 def handle_booking(prompt, args):
     return "handle_booking has been called."
@@ -178,22 +189,24 @@ def send_chat_message(prompt:str) -> str:
     chat = model.start_chat()
 
     # Gemini로 채팅 메시지 보내기
-    response = chat.send_message(prompt).candidates[0].content.parts[0]
-    print(response)
+    llm_response = chat.send_message(prompt).candidates[0].content.parts[0]
+    print("response => ", llm_response)
 
     # 함수 호출의 응답에서 값 추출
-    if (response.function_call is not None):
-        function_args = response.function_call.args
-        function_name = response.function_call.name
-        ret = operations[function_name](prompt, function_args)
+    if (llm_response.function_call is not None):
+        function_args = llm_response.function_call.args
+        function_name = llm_response.function_call.name
+        response = operations[function_name](prompt, function_args)
     else:
-        ret = response.text
-    # function_call = response.candidates[0].content.parts[0].function_call
+        response = {
+            "response_type": "plain_text",
+            "answer": llm_response.text,
+            "data": None
+        }
 
     # 함수 선택
     # selected_function_name = function_call.name
     
     # answer_response = search_pdf(prompt)
-    return ret
-    
+    return response
     
