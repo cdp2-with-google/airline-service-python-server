@@ -13,6 +13,11 @@ conversations = {}
 conversation_id_list = []
 new_conversation_id = 0
 
+def make_title(s, length=15):
+    if len(s) > length:
+        return s[:length] + "..."
+    return s
+
 # GET /conversations/id-list
 @app.route('/conversations/id-list', methods=['GET'])
 def get_id_list():
@@ -99,7 +104,7 @@ def mvp_create_conversation():
         new_conversation_id += 1
         conversation_id_list.append(conversation_id)
         conversations[conversation_id] = {
-            "title": '${conversation_id}', # 일단 대화 id로 지정
+            "title": make_title(question), # 질문 앞 15글자 잘라서 title로 지정
             "engine": engine,
             "create_time": datetime.now(),
             "update_time": datetime.now(),
@@ -109,14 +114,10 @@ def mvp_create_conversation():
         return jsonify({"error": "Conversation not found"}), 404
 
     # 답변 생성 및 저장
-    answer = send_chat_message(question)  # 여기를 우리가 만든 모델에서 받아오는 부분
-    response_data = {
-        'data': {
-            'conversation_id': conversation_id,
-            'title': "",
-            'answer': answer
-        }
-    }
+    response = send_chat_message(question)  # 여기를 우리가 만든 모델에서 받아오는 부분
+    answer = response["answer"]
+    response["conversation_id"] = conversation_id
+    response["title"] = conversations[conversation_id]["title"]
 
     # 요청 메시지와 응답 메시지 저장
     conversation_data = {
@@ -127,7 +128,7 @@ def mvp_create_conversation():
     }
     conversations[conversation_id]['pairing'].append(conversation_data)
 
-    return jsonify(response_data)
+    return jsonify(response)
 
 if __name__ == '__main__':
     app.run(debug=True)
