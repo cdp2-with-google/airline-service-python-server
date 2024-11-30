@@ -9,6 +9,8 @@ from vertexai.generative_models import (
 from ..rag.vertex_ai_search import search_pdf
 from datetime import datetime
 from ..flight_info.get_flight_info import get_flight_info
+from ..booking.booking_flight import book_flight
+
 
 def delcare_functions() -> Tool:
     # 항공사 운송 약관(탑승 수속, 수하물 규정 등)을 조회
@@ -105,6 +107,7 @@ def handle_flight_information(prompt, args):
     }
 
 def handle_booking(prompt, args):
+    book_flight(args)
     return "handle_booking has been called."
 
 operations = {
