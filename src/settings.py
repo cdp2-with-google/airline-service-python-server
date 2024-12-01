@@ -1,2 +1,0 @@
-SEARCH_URL = "https://discoveryengine.googleapis.com/v1alpha/projects/965998489425/locations/global/collections/default_collection/engines/vertex-agent-layout-app_1728724306435/servingConfigs/default_search:search"
-SERVER_URL = "https://airline-service-python-server-965998489425.asia-northeast3.run.app"
