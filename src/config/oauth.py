@@ -3,14 +3,15 @@ from firebase_admin import credentials, firestore, initialize_app
 import jwt
 import datetime
 import uuid
-import config
+from config import GOOGLE_CLIENT_ID, SECRET_KEY
+from src.settings import SERVER_URL
 import requests
 from flask_cors import CORS
 from jwt import PyJWTError
-import settings
+
 
 # JWT 비밀키
-SECRET_KEY = config.SECRET_KEY
+SECRET_KEY = SECRET_KEY
 
 # Google 공개키 가져오기
 def get_google_public_keys():
@@ -70,7 +71,7 @@ def verify_google_token(token):
             token,
             rsa_key,
             algorithms=['RS256'],
-            audience=config.GOOGLE_CLIENT_ID, # 구글 클라이언트 ID
+            audience=GOOGLE_CLIENT_ID, # 구글 클라이언트 ID
             issuer='https://accounts.google.com'
         )
 
@@ -85,7 +86,7 @@ def verify_google_token(token):
 def generate_access_token(user_info):
     utc_now = datetime.datetime.now(datetime.timezone.utc)
     payload = {
-        "iss": settings.SERVER_URL,  # 서버 URI
+        "iss": SERVER_URL,  # 서버 URI
         "sub": user_info["id"],
         "email": user_info["email"],
         "name": user_info["name"],
@@ -97,7 +98,7 @@ def generate_access_token(user_info):
 def generate_refresh_token():
     utc_now = datetime.datetime.now(datetime.timezone.utc)
     payload = {
-        "iss": settings.SERVER_URL,
+        "iss": SERVER_URL,
         "sub": str(uuid.uuid4()),
         "exp": utc_now + datetime.timedelta(days=30),  # 30일 만료
         "iat": utc_now
