@@ -162,10 +162,10 @@ cython_debug/
 #.idea/
 
 .idea
-# resources
+resources
 
-# # Auth 관련 Config
-# src/config/config.py
+# Auth 관련 Config
+src/config/config.py
 
-# # Config
-# src/settings.py
+# Config
+src/settings.py
