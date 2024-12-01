@@ -11,7 +11,8 @@ from jwt import PyJWTError
 
 app = Flask(__name__)
 
-CORS(app, supports_credentials=True)
+# 모든 도메인에서의 요청 허용
+CORS(app, supports_credentials=True, resources={r"/api/*": {"origins": "*"}})
 
 app.secret_key = os.urandom(24)
 
@@ -41,7 +42,7 @@ def verify_google_access_token(access_token):
         
         if response.status_code == 200:
             user_info = response.json()
-            # print("User info from Google:", user_info)  # 디버깅용
+            # print("User info from Google:", user_info) # 디버깅용
             return user_info
         else:
             raise Exception("Failed to fetch user information from Google")
@@ -115,12 +116,18 @@ def generate_refresh_token():
     }
     return jwt.encode(payload, SECRET_KEY, algorithm="HS256")
 
-@app.route('/api/v1/oauth', methods=['OPTIONS', 'POST'])
+@app.route('/api/v1/oauth', methods=['OPTIONS'])
+def oauth_preflight():
+    response = jsonify({"message": "CORS Preflight"})
+    response.status_code = 200
+    return response
+
+@app.route('/api/v1/oauth', methods=['POST'])
 def oauth_login():
-    if request.method == 'OPTIONS':
-        response = jsonify({"message": "CORS Preflight"})
-        response.status_code = 200
-        return response
+    # if request.method == 'OPTIONS':
+    #     response = jsonify({"message": "CORS Preflight"})
+    #     response.status_code = 200
+    #     return response
 
     social_token = request.json.get('socialToken')
     print("클라이언트에서 전송한 Google Access Token (Social Token):", social_token)
