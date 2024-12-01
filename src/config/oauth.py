@@ -8,6 +8,7 @@ import os
 import requests
 from flask_cors import CORS
 from jwt import PyJWTError
+import settings
 
 app = Flask(__name__)
 
@@ -97,7 +98,7 @@ def verify_google_token(token):
 def generate_access_token(user_info):
     utc_now = datetime.datetime.now(datetime.timezone.utc)
     payload = {
-        "iss": "http://127.0.0.1:5000",  # 서버 URI
+        "iss": settings.SERVER_URL,  # 서버 URI
         "sub": user_info["id"],
         "email": user_info["email"],
         "name": user_info["name"],
@@ -109,7 +110,7 @@ def generate_access_token(user_info):
 def generate_refresh_token():
     utc_now = datetime.datetime.now(datetime.timezone.utc)
     payload = {
-        "iss": "http://127.0.0.1:5000",
+        "iss": settings.SERVER_URL,
         "sub": str(uuid.uuid4()),
         "exp": utc_now + datetime.timedelta(days=30),  # 30일 만료
         "iat": utc_now
