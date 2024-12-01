@@ -117,10 +117,13 @@ def generate_refresh_token():
     }
     return jwt.encode(payload, SECRET_KEY, algorithm="HS256")
 
-@app.before_request
-def before_request():
-    if request.method == "OPTIONS":
-        return '', 200  # OPTIONS 요청에 대해 200 OK 응답을 반환
+@app.route('/api/v1/oauth', methods=['OPTIONS'])
+def options():
+    response = jsonify({'message': 'OK'})
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+    return response
 
 @app.route('/api/v1/oauth', methods=['POST'])
 def oauth_login():
