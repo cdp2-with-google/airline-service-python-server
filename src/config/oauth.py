@@ -4,23 +4,10 @@ import jwt
 import datetime
 import uuid
 import config
-import os
 import requests
 from flask_cors import CORS
 from jwt import PyJWTError
 import settings
-
-app = Flask(__name__)
-
-# 모든 도메인에서의 요청 허용
-CORS(app, resources={r"/api/*": {"origins": "*"}})
-
-app.secret_key = os.urandom(24)
-
-# Firestore 초기화
-cred = credentials.Certificate("resources/firestoreAccountKey.json")
-initialize_app(cred)
-db = firestore.client()
 
 # JWT 비밀키
 SECRET_KEY = config.SECRET_KEY
@@ -116,47 +103,3 @@ def generate_refresh_token():
         "iat": utc_now
     }
     return jwt.encode(payload, SECRET_KEY, algorithm="HS256")
-
-# @app.route('/api/v1/oauth', methods=['OPTIONS'])
-# def options():
-#     response = jsonify({'message': 'OK'})
-#     response.headers['Access-Control-Allow-Origin'] = '*'
-#     response.headers['Access-Control-Allow-Methods'] = '*'
-#     response.headers['Access-Control-Allow-Headers'] = '*'
-#     return response
-
-@app.route('/api/v1/oauth', methods=['POST'])
-def oauth_login():
-    social_token = request.json.get('socialToken')
-
-    if not social_token:
-        return jsonify({"error": "Social token is missing"}), 400
-
-    try:
-        # Google Access Token으로 user_info 가져오기
-        user_info = verify_google_access_token(social_token)
-
-        # Firestore 저장 (user_info)
-        user_ref = db.collection('users').document(user_info['id'])
-        user_ref.set({
-            'email': user_info['email'],
-            'name': user_info['name'],
-            'picture': user_info.get('picture', ''),
-            'socialToken': social_token
-        })
-
-        # 자체 Access Token 및 Refresh Token 생성
-        access_token = generate_access_token(user_info)
-        refresh_token = generate_refresh_token()
-
-        return jsonify({
-            'accessToken': access_token,
-            'refreshToken': refresh_token
-        })
-
-    except Exception as e:
-        print(f"Error occurred: {e}")  # 예외 메시지 출력
-        return jsonify({"error": f"Token validation failed: {str(e)}"}), 400
-
-if __name__ == '__main__':
-    app.run(debug=True)
