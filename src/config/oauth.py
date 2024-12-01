@@ -117,8 +117,18 @@ def generate_refresh_token():
     }
     return jwt.encode(payload, SECRET_KEY, algorithm="HS256")
 
-@app.route('/api/v1/oauth', methods=['POST'])
+@app.route('/api/v1/oauth', methods=['POST','OPTIONS'])
 def oauth_login():
+    # OPTIONS 요청 처리
+    if request.method == 'OPTIONS':
+        # CORS 헤더를 추가한 상태로 응답을 보냄
+        response = jsonify({})
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        response.headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS'
+        response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+        return response
+    
+
     social_token = request.json.get('socialToken')
 
     if not social_token:
