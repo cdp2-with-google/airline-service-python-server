@@ -164,5 +164,8 @@ cython_debug/
 .idea
 resources
 
+# Auth 관련 Config
+src/config/config.py
+
 # Config
 src/settings.py
