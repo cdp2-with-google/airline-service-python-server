@@ -3,3 +3,4 @@ GOOGLE_CLIENT_SECRET = "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"
 GOOGLE_DISCOVERY_URL = "https://accounts.google.com/.well-known/openid-configuration"
 
 FIREBASE_CREDENTIALS_PATH = "resources/firestoreAccountKey.json"
+SECRET_KEY = "SPADMaNXGtGmQe7OtFJAFA7KOSX+TSFIYgFKAoFu1nVSX9JDTsLgW5FvFrU1ewO4g4xH0ayt9ZFkw9oHLvjVmg=="
