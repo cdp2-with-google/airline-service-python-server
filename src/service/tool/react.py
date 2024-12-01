@@ -107,8 +107,18 @@ def handle_flight_information(prompt, args):
     }
 
 def handle_booking(prompt, args):
-    book_flight(args)
-    return "handle_booking has been called."
+    booking_result = book_flight(args)
+    if (booking_result is None):
+        return {
+            "response_type": "plain_text",
+            "answer": "없는 비행 일정입니다. 정확한 날짜와 시간을 다시 알려주세요.",
+            "data": None
+        }
+    return {
+        "response_type": "book_flight",
+        "answer": str(booking_result),
+        "data": booking_result
+    }
 
 operations = {
     "get_airline_policy": handle_airline_policy,

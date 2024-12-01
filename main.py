@@ -18,6 +18,18 @@ def make_title(s, length=15):
         return s[:length] + "..."
     return s
 
+def get_concatenated_messages(conversation_id):
+    # pairing 배열 가져오기
+    pairing = conversations[conversation_id].get("pairing", [])
+    # 배열의 마지막 두 개 가져오기 (최대 두 개만)
+    last_two = pairing[-2:]  # 배열 크기가 3보다 작으면 가능한 만큼만 반환
+    # "request_message"와 "response_message"를 추출해 \n으로 구분해 문자열로 이어 붙이기
+    result = "\n".join(
+        f"{item.get('request_message', '')}\n{item.get('response_message', '')}" 
+        for item in last_two
+    )
+    return result
+
 # GET /conversations/id-list
 @app.route('/conversations/id-list', methods=['GET'])
 def get_id_list():
@@ -62,8 +74,11 @@ def mvp_create_conversation():
     elif conversation_id not in conversations:
         return jsonify({"error": "Conversation not found"}), 404
 
+    # 이전 질문답변 세개 정도를 question에 추가하기
+    question_to_process = get_concatenated_messages(conversation_id) + "\n-----Previous conversation to refer to -----\n" + question
+
     # 답변 생성 및 저장
-    response = send_chat_message(question)  # 여기를 우리가 만든 모델에서 받아오는 부분
+    response = send_chat_message(question_to_process)  # 여기를 우리가 만든 모델에서 받아오는 부분
     answer = response["answer"]
     response["conversation_id"] = conversation_id
     response["title"] = conversations[conversation_id]["title"]

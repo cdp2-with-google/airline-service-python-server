@@ -1,7 +1,6 @@
 from ...util.firebase import init_firestore_client
 from google.cloud.firestore_v1.base_query import FieldFilter
 from datetime import datetime, timedelta
-import requests
 
 db = init_firestore_client()
 collection_name = "flight_info"
@@ -55,3 +54,20 @@ def get_time_gap(time1, time2):
     total_minutes = int(time_difference.total_seconds() / 60)
     hours, minutes = divmod(total_minutes, 60)
     return f"{hours:02}:{minutes:02}"
+
+# booking_flight에서 사용할 함수 -> 조회되는 값은 하나 뿐이라 가정
+# get_specific_flight_id => 명확히 출발, 도착 공항 code와 출발 시간까지 명시돼있어야 함.
+def get_specific_fight_info(args):
+    print("args : ", args)
+    query_res = db.collection(collection_name)\
+        .where(filter=FieldFilter("`출발공항`", "==", args["departure_code"]))\
+        .where(filter=FieldFilter("`도착공항`", "==", args["destination_code"]))\
+        .where(filter=FieldFilter("`출발시간`", "==", args["time"]+":00"))\
+        .stream()
+    result_list = list(query_res)
+    if len(result_list) == 0:
+        return None
+    return {
+        "flight_id":result_list[0].id,
+        "data": result_list[0].to_dict()
+    }
