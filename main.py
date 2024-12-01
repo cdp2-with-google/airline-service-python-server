@@ -10,14 +10,6 @@ from src.util.firebase import init_firestore_client
 app = Flask(__name__)
 CORS(app)
 
-# @app.route('/api/v1/oauth', methods=['OPTIONS'])
-# def options():
-#     response = jsonify({'message': 'OK'})
-#     response.headers['Access-Control-Allow-Origin'] = '*'
-#     response.headers['Access-Control-Allow-Methods'] = '*'
-#     response.headers['Access-Control-Allow-Headers'] = '*'
-#     return response
-
 # Firestore 초기화
 db = init_firestore_client()
 

@@ -3,12 +3,11 @@ from firebase_admin import credentials, firestore, initialize_app
 import jwt
 import datetime
 import uuid
-from config import GOOGLE_CLIENT_ID, SECRET_KEY
+from src.config.config import GOOGLE_CLIENT_ID, SECRET_KEY
 from src.settings import SERVER_URL
 import requests
 from flask_cors import CORS
 from jwt import PyJWTError
-
 
 # JWT 비밀키
 SECRET_KEY = SECRET_KEY
