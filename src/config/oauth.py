@@ -12,12 +12,12 @@ from jwt import PyJWTError
 app = Flask(__name__)
 
 # 모든 도메인에서의 요청 허용
-CORS(app, supports_credentials=True, resources={r"/api/*": {"origins": "*"}})
+CORS(app, supports_credentials=True, resources={r"/*": {"origins": "*"}})
 
 app.secret_key = os.urandom(24)
 
 # Firestore 초기화
-cred = credentials.Certificate(config.FIREBASE_CREDENTIALS_PATH)
+cred = credentials.Certificate("resources/firestoreAccountKey.json")
 initialize_app(cred)
 db = firestore.client()
 
@@ -116,21 +116,9 @@ def generate_refresh_token():
     }
     return jwt.encode(payload, SECRET_KEY, algorithm="HS256")
 
-@app.route('/api/v1/oauth', methods=['OPTIONS'])
-def oauth_preflight():
-    response = jsonify({"message": "CORS Preflight"})
-    response.status_code = 200
-    return response
-
 @app.route('/api/v1/oauth', methods=['POST'])
 def oauth_login():
-    # if request.method == 'OPTIONS':
-    #     response = jsonify({"message": "CORS Preflight"})
-    #     response.status_code = 200
-    #     return response
-
     social_token = request.json.get('socialToken')
-    print("클라이언트에서 전송한 Google Access Token (Social Token):", social_token)
 
     if not social_token:
         return jsonify({"error": "Social token is missing"}), 400
@@ -158,6 +146,7 @@ def oauth_login():
         })
 
     except Exception as e:
+        print(f"Error occurred: {e}")  # 예외 메시지 출력
         return jsonify({"error": f"Token validation failed: {str(e)}"}), 400
 
 if __name__ == '__main__':
