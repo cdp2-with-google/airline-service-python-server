@@ -163,3 +163,5 @@ cython_debug/
 
 .idea
 resources
+
+src/config/config.py
