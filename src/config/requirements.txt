@@ -3,3 +3,6 @@ google-auth
 google-auth-oauthlib
 google-auth-httplib2
 firebase-admin
+PyJWT
+requests
+flask-cors
