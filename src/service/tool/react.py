@@ -126,7 +126,7 @@ operations = {
     "book_flight": handle_booking
 }
 
-def send_chat_message(prompt:str) -> str:
+def send_chat_message(prompt:str, user_data: dict) -> str:
     # (멘토님 추천) Gemini 활용 사전 질문 정제 필요? (ex. 나리타-도쿄 못 찾는 경우 등)
     # 기존 context 유지 위해 대화 내역 가져와서 붙이는거 필요?
 
@@ -209,7 +209,11 @@ def send_chat_message(prompt:str) -> str:
     if (llm_response.function_call is not None):
         function_args = llm_response.function_call.args
         function_name = llm_response.function_call.name
-        response = operations[function_name](prompt, function_args)
+        
+        if (function_name == 'book_flight'):
+            response = operations[function_name](prompt, function_args, user_data)
+        else:
+            response = operations[function_name](prompt, function_args)
     else:
         response = {
             "response_type": "plain_text",

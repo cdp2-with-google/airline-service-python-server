@@ -99,10 +99,10 @@ def verify_access_token(token) :
 @app.route('/conversations', methods=['POST'])
 def mvp_create_conversation():
 
-    data = request.get_json()
-
     # token 검증하고 사용자 정보 가져오는 로직 시작
-    access_token = data.get('auth')
+    access_token = request.headers.get('auth') # Header의 Auth에 있는 accessToken 가져오기
+    # refresh_token은 필요 없을 것 같은데 혹시 사용할까봐 추가해둠
+    refresh_token = request.headers.get('refresh') # Header의 Refresh에 있는 refreshToken 가져오기
 
     if not access_token:
         return jsonify({"error": 'Access token is missing'}), 401
@@ -122,6 +122,8 @@ def mvp_create_conversation():
         return jsonify({"error": str(e)}), 400
 
     #######################
+    data = request.get_json()
+
     # 요청으로부터 필요 데이터 추출
     conversation_id = data.get('data', {}).get('conversation_id', 0)
     question = data.get('data', {}).get('question', None)
