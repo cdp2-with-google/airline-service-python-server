@@ -51,7 +51,7 @@ def book_flight(args, user_data):
         "destination_code": flight_data["도착공항"],
         "gate": gate,
         "class": seat_class,
-        "name": "John",
+        "name": name,
         "date": args["date"],
         "seat": seat_number,
         "departure_time": flight_data["출발시간"][0:5],

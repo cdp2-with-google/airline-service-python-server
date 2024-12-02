@@ -91,6 +91,7 @@ def verify_access_token(token) :
         payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
         return payload # 유효한 토큰이면
     except jwt.ExpiredSignatureError:
+        # access Token 갱신하는 로직 들어가야함
         raise Exception("Access token has expired")
     except jwt.InvalidTokenError:
         raise Exception("Invalid access token")
