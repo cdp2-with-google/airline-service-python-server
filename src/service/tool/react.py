@@ -106,8 +106,8 @@ def handle_flight_information(prompt, args):
         "data": flight_info
     }
 
-def handle_booking(prompt, args):
-    booking_result = book_flight(args)
+def handle_booking(prompt, args, user_data):
+    booking_result = book_flight(args, user_data)
     if (booking_result is None):
         return {
             "response_type": "plain_text",
