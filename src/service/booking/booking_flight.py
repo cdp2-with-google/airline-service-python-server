@@ -2,7 +2,7 @@ import random
 from ...util.firebase import init_firestore_client
 from ..flight_info.get_flight_info import get_specific_fight_info
 
-def book_flight(args):
+def book_flight(args, user_data):
     db = init_firestore_client()
     collection_name = "booking_flight"
 
@@ -26,10 +26,13 @@ def book_flight(args):
     flight_id = flight_info["flight_id"]
     flight_data = flight_info["data"]
 
+    name = user_data.get("name")
+    email = user_data.get("email")
+
     data = {
-        "name": "John",
+        "name": name,
         "age": 30,
-        "email": "john@example.com",
+        "email": email,
         "flight_id": flight_id,
         "date": args["date"],
         "gate": gate,
