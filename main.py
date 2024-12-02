@@ -6,6 +6,8 @@ from datetime import datetime
 from src.service.tool.react import send_chat_message
 from src.config.oauth import verify_google_access_token,generate_access_token, generate_refresh_token
 from src.util.firebase import init_firestore_client
+from src.config.config import SECRET_KEY
+import jwt
 
 app = Flask(__name__)
 CORS(app)
@@ -82,11 +84,44 @@ def get_conversation(conversation_id):
     else:
         return jsonify({"error": "Conversation not found"}), 404
 
+# accessToken 검증
+def verify_access_token(token) :
+    try:
+        # JWT 토큰 검증
+        payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+        return payload # 유효한 토큰이면
+    except jwt.ExpiredSignatureError:
+        raise Exception("Access token has expired")
+    except jwt.InvalidTokenError:
+        raise Exception("Invalid access token")
+    
 # POST /conversations
 @app.route('/conversations', methods=['POST'])
 def mvp_create_conversation():
+
     data = request.get_json()
 
+    # token 검증하고 사용자 정보 가져오는 로직 시작
+    access_token = data.get('auth')
+
+    if not access_token:
+        return jsonify({"error": 'Access token is missing'}), 401
+    
+    try:
+        # accessToken 검증하고 user_info 가져오기
+        user_info = verify_access_token(access_token)
+        user_name = user_info.get('name')
+        user_email = user_info.get('email')
+
+        user_data = {
+            "name" : user_name,
+            "email": user_email
+        }
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+    #######################
     # 요청으로부터 필요 데이터 추출
     conversation_id = data.get('data', {}).get('conversation_id', 0)
     question = data.get('data', {}).get('question', None)
@@ -116,7 +151,7 @@ def mvp_create_conversation():
     question_to_process = get_concatenated_messages(conversation_id) + "\n-----Previous conversation to refer to -----\n" + question
 
     # 답변 생성 및 저장
-    response = send_chat_message(question_to_process)  # 여기를 우리가 만든 모델에서 받아오는 부분
+    response = send_chat_message(question_to_process, user_data)  # 여기를 우리가 만든 모델에서 받아오는 부분
     answer = response["answer"]
     response["conversation_id"] = conversation_id
     response["title"] = conversations[conversation_id]["title"]
