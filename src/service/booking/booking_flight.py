@@ -55,5 +55,6 @@ def book_flight(args, user_data):
         "date": args["date"],
         "seat": seat_number,
         "departure_time": flight_data["출발시간"][0:5],
-		"arrival_time": flight_data["도착시간"][0:5]
+		"arrival_time": flight_data["도착시간"][0:5],
+        "price": flight_data["price"]
     }
