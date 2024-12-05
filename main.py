@@ -139,9 +139,13 @@ def mvp_create_conversation():
         global new_conversation_id
         conversation_id = new_conversation_id
         new_conversation_id += 1
-        conversation_id_list.append(conversation_id)
+        title = make_title(question)   # 질문 앞 15글자 잘라서 title로 지정
+        conversation_id_list.append({
+            "conversation_id": conversation_id,
+            "title": title
+        })
         conversations[conversation_id] = {
-            "title": make_title(question), # 질문 앞 15글자 잘라서 title로 지정
+            "title": title,
             "engine": engine,
             "create_time": datetime.now(),
             "update_time": datetime.now(),
