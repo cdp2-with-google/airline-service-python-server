@@ -3,30 +3,30 @@ from ...util.firebase import init_firestore_client
 from ..flight_info.get_flight_info import get_specific_fight_info
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
-import pytz
+# import pytz
 
-def format_event_time(data, time):
-    # 한국 시간(KST) 타임존 설정
-    kst = pytz.timezone('Asia/Seoul')
+# def format_event_time(data, time):
+#     # 한국 시간(KST) 타임존 설정
+#     kst = pytz.timezone('Asia/Seoul')
 
-     # 날짜와 시간을 하나로 합침 (예: "2024-12-15 14:30")
-    datetime = f"{data} {time}"
+#      # 날짜와 시간을 하나로 합침 (예: "2024-12-15 14:30")
+#     datetime = f"{data} {time}"
     
-    # 문자열을 datetime 객체로 변환
-    local_time = datetime.strptime(datetime, "%Y-%m-%d %H:%M")
+#     # 문자열을 datetime 객체로 변환
+#     local_time = datetime.strptime(datetime, "%Y-%m-%d %H:%M")
     
-    # 한국 시간대(KST)로 변환
-    local_time = kst.localize(local_time)
+#     # 한국 시간대(KST)로 변환
+#     local_time = kst.localize(local_time)
     
-    # ISO 8601 형식으로 변환
-    return local_time.isoformat()
+#     # ISO 8601 형식으로 변환
+#     return local_time.isoformat()
     
 
 # Google Calendar Transaction
 def add_event_to_calendar(user_data, flight_data):
 
-    departure_time = format_event_time(flight_data['data'], flight_data['departure_time'])
-    arrival_time = format_event_time(flight_data['data'], flight_data['arrival_time'])
+    # departure_time = format_event_time(flight_data['data'], flight_data['departure_time'])
+    # arrival_time = format_event_time(flight_data['data'], flight_data['arrival_time'])
 
     # Google Calendar API 클라이언트 초기화
     credentials = Credentials(token=user_data.get("accessToken"))
@@ -41,14 +41,22 @@ def add_event_to_calendar(user_data, flight_data):
             f"Gate: {flight_data['gate']}, Seat: {flight_data['seat_number']}\n"
             f"Class: {flight_data['seat_class']}"
         },
+        # 'start': {
+        #     'dateTime': departure_time,
+        #     'timeZone': 'Asia/Seoul',  # 한국 시간대(KST)로 설정
+        # },
+        # 'end': {
+        #     'dateTime': arrival_time,
+        #     'timeZone': 'Asia/Seoul',
+        # },
         'start': {
-            'dateTime': departure_time,
-            'timeZone': 'Asia/Seoul',  # 한국 시간대(KST)로 설정
-        },
-        'end': {
-            'dateTime': arrival_time,
+            'dateTime': '2024-12-22T09:00:00',
             'timeZone': 'Asia/Seoul',
         },
+        'end': {
+            'dateTime': '2015-05-28T17:00:00',
+            'timeZone': 'Asia/Seoul',
+  },
     }
 
     # Google Calendar에 이벤트 생성
