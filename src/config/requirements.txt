@@ -6,4 +6,3 @@ firebase-admin
 PyJWT
 requests
 flask-cors
-pytz
