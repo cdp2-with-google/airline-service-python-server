@@ -161,16 +161,18 @@ def mvp_create_conversation():
 
     # 답변 생성 및 저장
     response = send_chat_message(question_to_process, user_data)  # 여기를 우리가 만든 모델에서 받아오는 부분
+    create_time = datetime.now()
     answer = response["answer"]
     response["conversation_id"] = conversation_id
     response["title"] = conversations[conversation_id]["title"]
+    response["create_time"] = create_time
 
     # 요청 메시지와 응답 메시지 저장
     conversation_data = {
         "id": len(conversations[conversation_id]['pairing']),
         "request_message": question,
         "response_message": answer,
-        "create_time": datetime.now(),
+        "create_time": create_time,
         "response_type": response["response_type"],
         "data": response["data"]
     }
