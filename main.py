@@ -115,7 +115,8 @@ def mvp_create_conversation():
         user_email = user_info.get('email')
 
         user_data = {
-            "accessToken" : access_token,
+            # "accessToken" : access_token,
+            # "refreshToken" : refresh_token,
             "name" : user_name,
             "email": user_email
         }
