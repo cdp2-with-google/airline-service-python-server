@@ -4,23 +4,24 @@ from ..flight_info.get_flight_info import get_specific_fight_info
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from ...config.config import GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET,SECRET_KEY
-# import pytz
+import pytz
+from datetime import datetime
 
-# def format_event_time(data, time):
-#     # 한국 시간(KST) 타임존 설정
-#     kst = pytz.timezone('Asia/Seoul')
+def format_event_time(date, time):
+    # 한국 시간(KST) 타임존 설정
+    kst = pytz.timezone('Asia/Seoul')
 
-#      # 날짜와 시간을 하나로 합침 (예: "2024-12-15 14:30")
-#     datetime = f"{data} {time}"
+    # 날짜와 시간을 하나로 합침 (예: "2024-12-15 14:30")
+    date_time = f"{date} {time}"
     
-#     # 문자열을 datetime 객체로 변환
-#     local_time = datetime.strptime(datetime, "%Y-%m-%d %H:%M")
+    # 문자열을 datetime 객체로 변환
+    local_time = datetime.strptime(date_time, "%Y-%m-%d %H:%M")
     
-#     # 한국 시간대(KST)로 변환
-#     local_time = kst.localize(local_time)
+    # 한국 시간대(KST)로 변환
+    local_time = kst.localize(local_time)
     
-#     # ISO 8601 형식으로 변환
-#     return local_time.isoformat()
+    # ISO 8601 형식으로 변환
+    return local_time.isoformat()
     
 def get_social_token(args):
     db = init_firestore_client()
@@ -41,18 +42,13 @@ def get_social_token(args):
 # Google Calendar Transaction
 def add_event_to_calendar(user_data, flight_data):
 
-    # departure_time = format_event_time(flight_data['data'], flight_data['departure_time'])
-    # arrival_time = format_event_time(flight_data['data'], flight_data['arrival_time'])
+    departure_time = format_event_time(flight_data['date'], flight_data['departure_time'])
+    arrival_time = format_event_time(flight_data['date'], flight_data['arrival_time'])
 
     socialToken = get_social_token(user_data)
     # Google Calendar API 클라이언트
     credentials = Credentials(
         token=socialToken,
-        # refresh_token=user_data.get("refreshToken"),  # 리프레시 토큰 추가
-        # token_uri='https://oauth2.googleapis.com/token',  # 토큰 갱신 URL
-        # client_id= GOOGLE_CLIENT_ID,  # 클라이언트 ID
-        # client_secret= GOOGLE_CLIENT_SECRET, # 클라이언트 시크릿
-        # scopes=['https://www.googleapis.com/auth/calendar']
     )
     service = build('calendar', 'v3', credentials=credentials)
 
@@ -65,22 +61,22 @@ def add_event_to_calendar(user_data, flight_data):
             f"Gate: {flight_data['gate']}, Seat: {flight_data['seat_number']}\n"
             f"Class: {flight_data['seat_class']}"
         ),
-        # 'start': {
-        #     'dateTime': departure_time,
-        #     'timeZone': 'Asia/Seoul',  # 한국 시간대(KST)로 설정
-        # },
-        # 'end': {
-        #     'dateTime': arrival_time,
-        #     'timeZone': 'Asia/Seoul',
-        # },
         'start': {
-            'dateTime': '2024-12-22T09:00:00',
-            'timeZone': 'Asia/Seoul',
+            'dateTime': departure_time,
+            'timeZone': 'Asia/Seoul',  # 한국 시간대(KST)로 설정
         },
         'end': {
-            'dateTime': '2024-12-22T17:00:00',
+            'dateTime': arrival_time,
             'timeZone': 'Asia/Seoul',
         },
+        # 'start': {
+        #     'dateTime': '2024-12-22T09:00:00',
+        #     'timeZone': 'Asia/Seoul',
+        # },
+        # 'end': {
+        #     'dateTime': '2024-12-22T17:00:00',
+        #     'timeZone': 'Asia/Seoul',
+        # },
     }
 
     # Google Calendar에 이벤트 생성
