@@ -3,6 +3,7 @@ from ...util.firebase import init_firestore_client
 from ..flight_info.get_flight_info import get_specific_fight_info
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
+from ...config.config import GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET,SECRET_KEY
 # import pytz
 
 # def format_event_time(data, time):
@@ -21,6 +22,21 @@ from googleapiclient.discovery import build
 #     # ISO 8601 형식으로 변환
 #     return local_time.isoformat()
     
+def get_social_token(args):
+    db = init_firestore_client()
+    collection_name = "users"
+    
+    # 이메일로 해당 사용자 찾기
+    query_res = db.collection(collection_name).where("email", "==", args["email"]).limit(1).stream()
+
+    # 결과에서 첫 번째 문서 가져오기
+    # 첫 번째 문서 또는 없으면 None
+    doc = next(query_res, None) 
+
+    if doc:
+        user_data = doc.to_dict()
+        return user_data.get("socialToken", None)  
+    return None
 
 # Google Calendar Transaction
 def add_event_to_calendar(user_data, flight_data):
@@ -28,19 +44,27 @@ def add_event_to_calendar(user_data, flight_data):
     # departure_time = format_event_time(flight_data['data'], flight_data['departure_time'])
     # arrival_time = format_event_time(flight_data['data'], flight_data['arrival_time'])
 
-    # Google Calendar API 클라이언트 초기화
-    credentials = Credentials(token=user_data.get("accessToken"))
+    socialToken = get_social_token(user_data)
+    # Google Calendar API 클라이언트
+    credentials = Credentials(
+        token=socialToken,
+        # refresh_token=user_data.get("refreshToken"),  # 리프레시 토큰 추가
+        # token_uri='https://oauth2.googleapis.com/token',  # 토큰 갱신 URL
+        # client_id= GOOGLE_CLIENT_ID,  # 클라이언트 ID
+        # client_secret= GOOGLE_CLIENT_SECRET, # 클라이언트 시크릿
+        # scopes=['https://www.googleapis.com/auth/calendar']
+    )
     service = build('calendar', 'v3', credentials=credentials)
 
     event = {
         'summary': f"{flight_data['name']} 님의 항공편 예약: {flight_data['departure_code']} -> {flight_data['destination_code']} ({flight_data['flight_id']})",
-        'description': {
+        'description': (
             f"Passenger: {flight_data['name']} (Age: {flight_data['age']})\n"
             f"Email: {flight_data['email']}\n"
             f"Flight Date: {flight_data['date']}\n"
             f"Gate: {flight_data['gate']}, Seat: {flight_data['seat_number']}\n"
             f"Class: {flight_data['seat_class']}"
-        },
+        ),
         # 'start': {
         #     'dateTime': departure_time,
         #     'timeZone': 'Asia/Seoul',  # 한국 시간대(KST)로 설정
@@ -54,9 +78,9 @@ def add_event_to_calendar(user_data, flight_data):
             'timeZone': 'Asia/Seoul',
         },
         'end': {
-            'dateTime': '2015-05-28T17:00:00',
+            'dateTime': '2024-12-22T17:00:00',
             'timeZone': 'Asia/Seoul',
-  },
+        },
     }
 
     # Google Calendar에 이벤트 생성
