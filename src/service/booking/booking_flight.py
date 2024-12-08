@@ -27,7 +27,7 @@ def get_social_token(args):
     db = init_firestore_client()
     collection_name = "users"
     
-    # 이메일로 해당 사용자 찾기
+    # 이메일로 사용자 찾기
     query_res = db.collection(collection_name).where("email", "==", args["email"]).limit(1).stream()
 
     # 결과에서 첫 번째 문서 가져오기
@@ -45,11 +45,9 @@ def add_event_to_calendar(user_data, flight_data):
     departure_time = format_event_time(flight_data['date'], flight_data['departure_time'])
     arrival_time = format_event_time(flight_data['date'], flight_data['arrival_time'])
 
-    socialToken = get_social_token(user_data)
     # Google Calendar API 클라이언트
-    credentials = Credentials(
-        token=socialToken,
-    )
+    socialToken = get_social_token(user_data)
+    credentials = Credentials(token=socialToken)
     service = build('calendar', 'v3', credentials=credentials)
 
     event = {
@@ -69,17 +67,9 @@ def add_event_to_calendar(user_data, flight_data):
             'dateTime': arrival_time,
             'timeZone': 'Asia/Seoul',
         },
-        # 'start': {
-        #     'dateTime': '2024-12-22T09:00:00',
-        #     'timeZone': 'Asia/Seoul',
-        # },
-        # 'end': {
-        #     'dateTime': '2024-12-22T17:00:00',
-        #     'timeZone': 'Asia/Seoul',
-        # },
     }
 
-    # Google Calendar에 이벤트 생성
+    # Google Calendar에 일정 생성(추가)
     event_result = service.events().insert(calendarId='primary', body=event).execute()
     print(f"Event created: {event_result.get('htmlLink')}")
     
