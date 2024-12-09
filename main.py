@@ -18,7 +18,6 @@ db = init_firestore_client()
 @app.route('/api/v1/oauth', methods=['POST'])
 def oauth_login():
     social_token = request.json.get('socialToken')
-
     if not social_token:
         return jsonify({"error": "Social token is missing"}), 400
 
@@ -34,7 +33,7 @@ def oauth_login():
             'picture': user_info.get('picture', ''),
             'socialToken': social_token
         })
-
+        
         # 자체 Access Token 및 Refresh Token 생성
         access_token = generate_access_token(user_info)
         refresh_token = generate_refresh_token()
