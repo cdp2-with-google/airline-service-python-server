@@ -16,26 +16,35 @@
 
 ### 3. ReAct(Reason + Act) Architecture
 - LLM을 활용해 응답 생성뿐만 아니라, 외부 정보 관련 처리까지 판단하는 아키텍처
-![image](https://github.com/user-attachments/assets/4840837a-3f35-4357-8aa5-cdc6bc2fd009)
+<img width="682" alt="스크린샷 2024-12-11 오후 6 43 48" src="https://github.com/user-attachments/assets/0b4ef317-8fd8-42ef-899c-950227459d0f">
+
 
 ## System Architecture
 <img width="764" alt="스크린샷 2024-12-09 오후 9 56 34" src="https://github.com/user-attachments/assets/ae765fb0-573f-48ef-9ed0-f07c035f054f">
 
-## 프로젝트 결과
-### 사용 기술
+## 사용 기술
 - LLM model: Gemini 1.5 pro
 - Python, Flask, Langchain, Firebase
 - Google Cloud Platform: Vertex AI, Cloud run, Agent Builder
 - Collaboraiton Tool: Notion, Github
 
-### 핵심 기능
-* 채팅으로 항공사 규정/약관 조회 및 항공편 예약, Calendar 일정 추가까지 One-Stop 처리
+## 핵심 기능
+#### 채팅으로 항공사 규정/약관 조회 및 항공편 예약, Calendar 일정 추가까지 One-Stop 처리 서비스
 - ReAct 기반 Tool 선택 로직
 - Vertex AI Search 활용한 RAG Tool
-- 공공데이터 제공 항공편 조회 Tool
+- 공공데이터 활용 항공편 조회 Tool
 - Firestore 항공편 예약 Tool
 - Google OAuth 및 Google Calendar 일정 자동 생성
 - Google Cloud run - Serverless 배포
+
+### Google OAuth2.0 Login (JWT Token 활용)
+<img width="1396" alt="스크린샷 2024-12-10 오후 3 00 56" src="https://github.com/user-attachments/assets/125d0158-1604-43b0-a722-44f7a3e7eed1">
+
+![OAuth 구글 로그인 drawio](https://github.com/user-attachments/assets/668eed4d-fb0d-4e52-8bcc-e4a5d4b1d98e)
+
+<img width="840" alt="스크린샷 2024-12-11 오후 6 50 05" src="https://github.com/user-attachments/assets/f645a322-b7aa-4e19-9f0f-eb502725f270">
+<img width="840" alt="스크린샷 2024-12-11 오후 6 50 27" src="https://github.com/user-attachments/assets/8e847831-e6e1-4412-81ae-c6b5dcc6b275">
+
 
 ## 기대 효과
 - CS 효율성 향상: 고객 서비스 팀의 일상적인 반복 업무 자동화 → 고객 응대 시간 단축
