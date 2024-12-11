@@ -11,7 +11,7 @@
 ### 2. RAG(Retrieval Augmented Generation)
 - '지식 검색' + '언어 생성'
 - 질문에 답하기 위해 필요한 지식을 외부 데이터베이스에서 검색하여 활용
-<img width="1217" alt="image" src="https://github.com/user-attachments/assets/44270937-7a89-4cec-b7d0-12b81889ff0b">
+<img width="682" alt="image" src="https://github.com/user-attachments/assets/44270937-7a89-4cec-b7d0-12b81889ff0b">
 
 
 ### 3. ReAct(Reason + Act) Architecture
@@ -38,12 +38,13 @@
 - Google Cloud run - Serverless 배포
 
 ### Google OAuth2.0 Login (JWT Token 활용)
+<div style="display: flex; justify-content: center; align-items: center;">
 <img width="1396" alt="스크린샷 2024-12-10 오후 3 00 56" src="https://github.com/user-attachments/assets/125d0158-1604-43b0-a722-44f7a3e7eed1">
 
-![OAuth 구글 로그인 drawio](https://github.com/user-attachments/assets/668eed4d-fb0d-4e52-8bcc-e4a5d4b1d98e)
+<div style="display: flex; justify-content: center; align-items: center;">
+<img width="400" alt="스크린샷 2024-12-11 오후 6 50 05" src="https://github.com/user-attachments/assets/f645a322-b7aa-4e19-9f0f-eb502725f270">
+<img width="400" alt="스크린샷 2024-12-11 오후 6 50 27" src="https://github.com/user-attachments/assets/8e847831-e6e1-4412-81ae-c6b5dcc6b275">
 
-<img width="840" alt="스크린샷 2024-12-11 오후 6 50 05" src="https://github.com/user-attachments/assets/f645a322-b7aa-4e19-9f0f-eb502725f270">
-<img width="840" alt="스크린샷 2024-12-11 오후 6 50 27" src="https://github.com/user-attachments/assets/8e847831-e6e1-4412-81ae-c6b5dcc6b275">
 
 
 ## 기대 효과
