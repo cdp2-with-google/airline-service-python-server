@@ -31,15 +31,21 @@ https://www.youtube.com/watch?v=uSKJbtROF4M
 - Collaboraiton Tool: Notion, Github
 
 ## ⭐️ 핵심 기능
-#### 채팅으로 항공사 규정/약관 조회 및 항공편 예약, Calendar 일정 추가까지 One-Stop 처리 서비스
+### 채팅으로 항공사 규정/약관 조회 및 항공편 예약, Calendar 일정 추가까지 One-Stop 처리 서비스
 - ReAct 기반 Tool 선택 로직
 - Vertex AI Search 활용한 RAG Tool
 - 공공데이터 활용 항공편 조회 Tool
 - Firestore 항공편 예약 Tool
 - Google OAuth 및 Google Calendar 일정 자동 생성
 - Google Cloud run - Serverless 배포
+### Agent의 사용자 요청 처리 구조
+<img width="833" alt="스크린샷 2024-12-11 오후 10 43 56" src="https://github.com/user-attachments/assets/5f3e3d66-54f4-4d74-b81f-61c2da734860">
 
-### 1. Google OAuth2.0 Login (JWT Token 활용)
+
+## 1. OAuth2.0 Google Login (JWT Token 활용)
+### Flow
+<img width="550" src="https://github.com/user-attachments/assets/db28358b-279f-4fc7-88f1-1d5b3788c779" alt="20">
+
 <img width="100%" alt="스크린샷 2024-12-10 오후 3 00 56" src="https://github.com/user-attachments/assets/125d0158-1604-43b0-a722-44f7a3e7eed1">
 
 <div style="display: flex; justify-content: center; align-items: center;">
@@ -47,14 +53,20 @@ https://www.youtube.com/watch?v=uSKJbtROF4M
 <img width="49.7%" alt="스크린샷 2024-12-11 오후 6 59 12" src="https://github.com/user-attachments/assets/825f82d6-d59f-4a7f-adb0-38494283f41c">
 </div>
 
-### 2. 항공사 규정/약관 관련 문의 처리
+## 2. 항공사 규정/약관 관련 문의 처리
+- Vertex AI App의 Datastore 문서 파싱, 벡터화 처리 자동화(Layout Parser)
+- Data Storage에 저장된 파일 데이터 기반 → 정확하고 신뢰도 높은 답변 생성
 <img width="100%" alt="스크린샷 2024-12-10 오후 3 00 45" src="https://github.com/user-attachments/assets/0bceeeb5-ac00-46e9-bf42-feef5467974a">
 <div style="display: flex; justify-content: center; align-items: center;">
 <img src="https://github.com/user-attachments/assets/5abe05d0-59ae-47e7-bc39-3243ceac8d5f" alt="25" width="49.7%">
-<img src="https://github.com/user-attachments/assets/16251401-29d1-4031-b5d6-b8cb3a4660ed" alt="25" width="49.7%">
+<img src="https://github.com/user-attachments/assets/16251401-29d1-4031-b5d6-b8cb3a4660ed" alt="26" width="49.7%">
 </div>
 
-### 3. 항공편 조회·예약
+## 3. 항공편 조회·예약
+- 공공데이터포털 [국제선 항공기 스케줄 데이터 활용](https://www.data.go.kr/data/15003087/fileData.do#tab-layer-file)
+- 사용자의 문의 챗에서 '날짜', '출발 공항', '도착 공항' 파라미터를 추출하여 항공편 일정 리스트 조회
+- "N번째 항공편으로 예약해줘" 또는 "N시 N분에 출발하는 항공편으로 예약해줘" 등의 채팅으로 항공편 예약 진행
+- 현재 항공편 결제 시스템은 시뮬레이션 목적의 Mocking 방식으로 구현 (추후 실제 결제 시스템과의 연동 가능하도록 설계)
 <div style="display: flex; justify-content: center; align-items: center;">
 <img width="49.7%" alt="스크린샷 2024-12-11 오후 7 36 28" src="https://github.com/user-attachments/assets/f7b06fe2-c8e1-4266-ba7c-988ec8ee8d16">
 <img width="49.7%" alt="스크린샷 2024-12-11 오후 7 37 34" src="https://github.com/user-attachments/assets/12354fc5-d3cf-495a-95e8-e46ddec0899c">
@@ -64,7 +76,16 @@ https://www.youtube.com/watch?v=uSKJbtROF4M
 <img width="49.7%" alt="스크린샷 2024-12-11 오후 7 38 19" src="https://github.com/user-attachments/assets/c1524bf9-3b36-4505-8ab5-701a399cabd8">
 </div>
 
-### 4. Google Calendar 일정 자동 추가
+### 정확한 Tool Selection 위해, Tool별 parameter 구체화 및 Example 강화
+<div style="display: flex; justify-content: center; align-items: center;">
+<img width="49.7%" alt="스크린샷 2024-12-11 오후 10 50 47" src="https://github.com/user-attachments/assets/58f415fc-002b-4519-acca-17d04d90489f">
+<img width="49.7%" alt="스크린샷 2024-12-11 오후 10 51 05" src="https://github.com/user-attachments/assets/14ff9bcf-e0f9-417c-9a8d-d9aa03824cd6">
+</div>
+
+## 4. Google Calendar 일정 자동 추가
+- Google Calendar API 연동하여 이벤트 자동 생성 처리
+- String 타입의 날짜와 시간을 합쳐 한국 시간대(KST)로 변환 및 ISO 8601 포맷팅
+  
 <div style="display: flex; justify-content: center; align-items: center;">
 <img width="49.7%" alt="캘린더1" src="https://github.com/user-attachments/assets/ff000f5b-5cb5-4495-bd8b-96a937ce1796">
 <img width="49.7%" alt="캘린더2" src="https://github.com/user-attachments/assets/f0d43b38-3fc1-4e90-ab10-e633bff512b3">
