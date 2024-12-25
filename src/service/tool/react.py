@@ -140,7 +140,7 @@ def send_chat_message(prompt:str, user_data: dict) -> str:
     User prompt : Can I take a knife on board the Korean Air flight?
     Predicted Tool : flight_tool
     Predicted Function : get_airline_policy
-    Function parameters : {{"airline_name": "Koeran Air"}}
+    Function parameters : {{"airline_name": "Korean Air"}}
     </example-get_airline_policy>
     <example-get_airline_policy>
     User prompt: What is the baggage allowance for Emirates economy class?
